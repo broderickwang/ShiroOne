@@ -6,8 +6,10 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,7 +28,7 @@ import java.util.Set;
 public class CustomRealm extends AuthorizingRealm {
     Map<String,String> users = new HashMap<>();
     {
-        users.put("LanCoder","123456");
+        users.put("LanCoder","f80471e095c8588af10099dec3ed816d");
     }
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
@@ -52,6 +54,9 @@ public class CustomRealm extends AuthorizingRealm {
         }
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(username,password,"costomRealm");
 
+        //返回的认证 加盐
+        authenticationInfo.setCredentialsSalt(ByteSource.Util.bytes("LanCoder"));
+
         return authenticationInfo;
     }
 
@@ -73,5 +78,11 @@ public class CustomRealm extends AuthorizingRealm {
         roles.add("admin");
         roles.add("teacher");
         return roles;
+    }
+
+    public static void main(String[] args){
+        //密码 盐
+        Md5Hash md5Hash = new Md5Hash("123456","LanCoder");
+        System.out.print(md5Hash.toString());
     }
 }

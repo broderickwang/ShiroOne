@@ -2,6 +2,7 @@ package com.ttb.ShiroOne;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +27,12 @@ public class CostomRealmTest {
 
         DefaultSecurityManager defaultSecurityManager = new DefaultSecurityManager();
         defaultSecurityManager.setRealm(customRealm);
+
+        HashedCredentialsMatcher matcher = new HashedCredentialsMatcher();
+        matcher.setHashAlgorithmName("md5");    // 设置加密的算法
+        matcher.setHashIterations(1);       //设置加密的次数
+        //设置加密
+        customRealm.setCredentialsMatcher(matcher);
 
         SecurityUtils.setSecurityManager(defaultSecurityManager);
         org.apache.shiro.subject.Subject subject = SecurityUtils.getSubject();
