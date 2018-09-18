@@ -40,21 +40,6 @@ public class CustomRealm extends AuthorizingRealm {
         return simpleAuthorizationInfo;
     }
 
-    private Set<String> gerPermissionsByUsername(String username) {
-        // TODO: 2018/9/18 从数据库中获取用户的权限信息
-        Set<String> permissions = new HashSet<>();
-        permissions.add("sys:add:user");
-        return permissions;
-    }
-
-    private Set<String> getRolesByUsername(String username) {
-        // TODO: 2018/9/18 从数据库中获取用户的角色信息
-        Set<String> roles = new HashSet<>();
-        roles.add("admin");
-        roles.add("teacher");
-        return roles;
-    }
-
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         //认证
@@ -73,5 +58,20 @@ public class CustomRealm extends AuthorizingRealm {
     private String getPasswordByUsername(String username) {
         // TODO: 2018/9/18 模拟数据库，获取密码
         return users.get(username);
+    }
+
+    private Set<String> gerPermissionsByUsername(String username) {
+        // TODO: 2018/9/18 从数据库中获取用户的权限信息
+        Set<String> permissions = new HashSet<>();
+        permissions.add("sys:add:user");
+        return permissions;
+    }
+
+    private Set<String> getRolesByUsername(String username) {
+        // TODO: 2018/9/18 从数据库中获取用户的角色信息
+        Set<String> roles = new HashSet<>();
+        roles.add("admin");
+        roles.add("teacher");
+        return roles;
     }
 }
