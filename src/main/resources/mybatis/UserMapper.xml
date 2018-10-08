@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ttb.dao.UserDao">
+
+    <select id="getOne" resultType="com.ttb.domain.UserDO">
+        SELECT * FROM user where id = #{id}
+    </select>
+
+    <select id="getOneByName" resultType="com.ttb.domain.UserDO">
+        SELECT * FROM user where username = #{username}
+    </select>
+
+    <select id="getRoleByUsername" resultType="java.lang.String">
+        select r.`name` from user u left join user_role ur on ur.user_id=u.id
+        left join role r on r.id=ur.role_id where u.username=#{username}
+    </select>
+</mapper>

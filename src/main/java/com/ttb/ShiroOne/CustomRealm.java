@@ -1,5 +1,7 @@
 package com.ttb.ShiroOne;
 
+import com.ttb.dao.UserDao;
+import com.ttb.domain.UserDO;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -10,11 +12,9 @@ import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @project: ShiroOne
@@ -30,6 +30,10 @@ public class CustomRealm extends AuthorizingRealm {
     {
         users.put("LanCoder","f80471e095c8588af10099dec3ed816d");
     }
+
+    @Autowired
+    UserDao userDao;
+
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         //授权
@@ -62,7 +66,9 @@ public class CustomRealm extends AuthorizingRealm {
 
     private String getPasswordByUsername(String username) {
         // TODO: 2018/9/18 模拟数据库，获取密码
-        return users.get(username);
+//        return users.get(username);
+        UserDO userDO = userDao.getOneByName(username);
+        return userDO.getPassword();
     }
 
     private Set<String> gerPermissionsByUsername(String username) {
@@ -75,14 +81,16 @@ public class CustomRealm extends AuthorizingRealm {
     private Set<String> getRolesByUsername(String username) {
         // TODO: 2018/9/18 从数据库中获取用户的角色信息
         Set<String> roles = new HashSet<>();
-        roles.add("admin");
-        roles.add("teacher");
+        /*roles.add("admin");
+        roles.add("teacher");*/
+        List<String> rs = userDao.getRoleByUsername(username);
+        roles.addAll(rs);
         return roles;
     }
 
     public static void main(String[] args){
         //密码 盐
-        Md5Hash md5Hash = new Md5Hash("123456","LanCoder");
+        Md5Hash md5Hash = new Md5Hash("111111","LanCoder");
         System.out.print(md5Hash.toString());
     }
 }
